@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scan history — VerifAi</title>
+    <meta name="description" content="Past VerifAi authenticity scans and verdicts." />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="history.css" />
+    <script src="history.js" defer></script>
+  </head>
+  <body class="page-app page-history">
+    <header class="navbar">
+      <a class="navbar-brand" href="index.html">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span class="brand-text"><span class="brand-verif">Verif</span><span class="brand-ai">Ai</span></span>
+      </a>
+      <nav class="navbar-nav" aria-label="Primary">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.html#how-it-works" class="nav-link">How it works</a>
+        <a href="history.html" class="nav-link nav-link--active">History</a>
+        <a href="index.html#about" class="nav-link">About</a>
+      </nav>
+      <div class="navbar-actions">
+        <button type="button" class="btn-logout" id="nav-logout">Logout</button>
+        <a href="login.html" class="btn btn-ghost">Sign in</a>
+        <a href="upload.html" class="btn btn-primary">Get Started</a>
+      </div>
+    </header>
+
+    <main class="page-main history-main">
+      <header class="page-header">
+        <p class="section-tag"><span class="section-tag-dot" aria-hidden="true">●</span> HISTORY</p>
+        <h1 class="page-title">Your scan history</h1>
+      </header>
+
+      <p class="history-status" id="history-status" role="status" aria-live="polite" hidden></p>
+
+      <div class="history-empty-state" id="history-empty-state" hidden>
+        <div class="history-empty-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="1"/>
+            <path d="M8 12h8M12 8v8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="history-empty-title">No scans yet</p>
+        <p class="history-empty-text">Upload your first image.</p>
+        <a class="btn btn-primary" href="upload.html">Go to Upload</a>
+      </div>
+
+      <div class="history-table-wrap" id="history-table-wrap">
+        <table class="history-table">
+          <caption id="history-caption" class="visually-hidden">Your scans</caption>
+          <thead>
+            <tr>
+              <th scope="col">Image</th>
+              <th scope="col">Verdict</th>
+              <th scope="col">Confidence</th>
+              <th scope="col">Date</th>
+              <th scope="col"><span class="visually-hidden">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <a class="footer-brand" href="index.html">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span class="brand-text"><span class="brand-verif">Verif</span><span class="brand-ai">Ai</span></span>
+      </a>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="index.html">Home</a>
+        <a href="upload.html">Upload</a>
+        <a href="history.html">History</a>
+        <a href="register.html">Register</a>
+      </nav>
+      <p class="footer-copy">&copy; 2026 VerifAi. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

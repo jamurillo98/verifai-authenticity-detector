@@ -1,0 +1,268 @@
+{
+  "info": {
+    "_postman_id": "b7c1e0c4-9f1d-4c3f-9f8e-123456789abc",
+    "name": "Verifai API Test Suite",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "https://vrifai-backend.onrender.com/api/auth/register",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "auth", "register"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Register returns 200 (controller uses res.json without .status(201))",
+              "pm.test(\"Status is 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response has user object\", function () {",
+              "  var json = pm.response.json();",
+              "  pm.expect(json).to.have.property('user');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "https://vrifai-backend.onrender.com/api/auth/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "auth", "login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"JWT token present in response\", function () {",
+              "  var json = pm.response.json();",
+              "  pm.expect(json).to.have.property('token');",
+              "  pm.expect(json.token).to.be.a('string').and.not.empty;",
+              "  pm.environment.set('jwt', json.token);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Upload - Valid JPG",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt}}"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "test.jpg"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://vrifai-backend.onrender.com/api/upload",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "upload"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response contains verdict\", function () {",
+              "  var json = pm.response.json();",
+              "  pm.expect(json).to.have.property('verdict');",
+              "  pm.expect(json.verdict).to.be.a('string').and.not.empty;",
+              "});",
+              "pm.test(\"Response contains scanId\", function () {",
+              "  var json = pm.response.json();",
+              "  pm.expect(json).to.have.property('scanId');",
+              "  pm.environment.set('scan_id', json.scanId);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Upload - Invalid PDF",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt}}"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "test.pdf"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://vrifai-backend.onrender.com/api/upload",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "upload"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 400 for PDF upload\", function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "pm.test(\"Error message mentions PDF not allowed\", function () {",
+              "  var json = pm.response.json();",
+              "  pm.expect(json).to.have.property('error');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "History - With Token",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt}}"
+          }
+        ],
+        "url": {
+          "raw": "https://vrifai-backend.onrender.com/api/history",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "history"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response is an array\", function () {",
+              "  var json = pm.response.json();",
+              "  pm.expect(json).to.be.an('array');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "History - No Token",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://vrifai-backend.onrender.com/api/history",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "history"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 401 without token\", function () {",
+              "  pm.response.to.have.status(401);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Scan - GET by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://vrifai-backend.onrender.com/api/scan/{{scan_id}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "scan", "{{scan_id}}"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Response contains full scan object\", function () {",
+              "  var json = pm.response.json();",
+              "  pm.expect(json).to.have.property('scan');",
+              "  pm.expect(json.scan).to.be.an('object');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

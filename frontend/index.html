@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VerifAi — AI Image Authenticity Detector</title>
+    <meta
+      name="description"
+      content="Don't trust your Eyes? Verifai it. Detect AI-generated images instantly with VerifAi."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Opening intro overlay -->
+    <div id="intro-overlay" class="intro-overlay" aria-hidden="true">
+      <div class="intro-brand">
+        <div class="intro-brandmark" aria-label="VerifAi">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span class="brand-text"><span class="brand-verif">Verif</span><span class="brand-ai">Ai</span></span>
+        </div>
+      </div>
+      <p class="intro-slogan">
+        Don&rsquo;t Trust your Eyes? <span class="intro-slogan-accent">VerifAi</span> it.
+      </p>
+      <p class="intro-subtitle">AI image Authenticity detector</p>
+    </div>
+
+    <div id="landing" class="landing">
+      <!-- Navbar -->
+      <header class="navbar">
+        <a class="navbar-brand" href="index.html">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span class="brand-text"><span class="brand-verif">Verif</span><span class="brand-ai">Ai</span></span>
+        </a>
+        <nav class="navbar-nav" aria-label="Primary">
+          <a href="index.html" class="nav-link nav-link--active">Home</a>
+          <a href="#how-it-works" class="nav-link">How it works</a>
+          <a href="history.html" class="nav-link">History</a>
+          <a href="#about" class="nav-link">About</a>
+        </nav>
+        <div class="navbar-actions">
+          <a href="login.html" class="btn btn-ghost">Sign in</a>
+          <a href="upload.html" class="btn btn-primary">Get Started</a>
+        </div>
+      </header>
+
+      <main>
+        <!-- Hero -->
+        <section class="hero" aria-labelledby="hero-heading">
+          <div class="hero-left">
+            <p class="hero-eyebrow">
+              <span class="hero-eyebrow-line" aria-hidden="true"></span>
+              AI Image Detection
+            </p>
+            <h1 id="hero-heading" class="hero-heading">
+              Don&rsquo;t trust your eyes. <span class="text-accent">Verifai</span> it.
+            </h1>
+            <p class="hero-desc">
+              Upload any image and instantly discover whether it was captured by a real camera or synthesised by an AI engine. Pixel-level analysis. EXIF verification. Real results.
+            </p>
+            <div class="hero-buttons">
+              <a href="upload.html" class="btn btn-primary">Scan Your Image Now</a>
+              <a href="#how-it-works" class="btn btn-ghost">How it works &rarr;</a>
+            </div>
+            <div class="hero-stats">
+              <div class="hero-stat">
+                <span class="hero-stat-value">99%</span>
+                <span class="hero-stat-label">Accuracy</span>
+              </div>
+              <div class="hero-stat-divider" aria-hidden="true"></div>
+              <div class="hero-stat">
+                <span class="hero-stat-value">&lt;5s</span>
+                <span class="hero-stat-label">Analysis</span>
+              </div>
+              <div class="hero-stat-divider" aria-hidden="true"></div>
+              <div class="hero-stat">
+                <span class="hero-stat-value">Free</span>
+                <span class="hero-stat-label">To use</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-right">
+            <div id="scan-demo" class="scan-demo">
+              <div class="scan-image-wrap">
+                <img
+                  id="scan-image"
+                  class="scan-image"
+                  src="https://thispersondoesnotexist.com/"
+                  alt="Sample face for authenticity scan demo"
+                  width="240"
+                  height="300"
+                />
+                <div class="scan-image-fallback" aria-hidden="true"></div>
+
+                <!-- Phase 1: corner brackets -->
+                <div class="scan-brackets" aria-hidden="true">
+                  <span class="bracket bracket-tl"></span>
+                  <span class="bracket bracket-tr"></span>
+                  <span class="bracket bracket-bl"></span>
+                  <span class="bracket bracket-br"></span>
+                </div>
+
+                <!-- Phase 2: grid + beam -->
+                <div class="scan-grid" aria-hidden="true"></div>
+                <div class="scan-beam" aria-hidden="true"></div>
+
+                <!-- Phase 3: analysis dots -->
+                <div class="scan-dots" aria-hidden="true">
+                  <div class="scan-point" style="--x: 38%; --y: 32%;" data-label="Eye region">
+                    <span class="point-dot"></span>
+                    <span class="point-line"></span>
+                    <span class="point-label">Eye region</span>
+                  </div>
+                  <div class="scan-point" style="--x: 62%; --y: 32%;" data-label="Eye detail">
+                    <span class="point-dot"></span>
+                    <span class="point-line"></span>
+                    <span class="point-label">Eye detail</span>
+                  </div>
+                  <div class="scan-point" style="--x: 50%; --y: 48%;" data-label="Nose bridge">
+                    <span class="point-dot"></span>
+                    <span class="point-line"></span>
+                    <span class="point-label">Nose bridge</span>
+                  </div>
+                  <div class="scan-point" style="--x: 42%; --y: 62%;" data-label="Skin texture">
+                    <span class="point-dot"></span>
+                    <span class="point-line"></span>
+                    <span class="point-label">Skin texture</span>
+                  </div>
+                  <div class="scan-point" style="--x: 55%; --y: 18%;" data-label="Hair pattern">
+                    <span class="point-dot"></span>
+                    <span class="point-line"></span>
+                    <span class="point-label">Hair pattern</span>
+                  </div>
+                </div>
+
+                <!-- Side labels -->
+                <div class="scan-side-labels scan-side-labels--left" aria-hidden="true">
+                  <span class="side-label" data-step="0">Pixel pattern</span>
+                  <span class="side-label" data-step="1">EXIF data</span>
+                  <span class="side-label" data-step="2">Noise map</span>
+                  <span class="side-label" data-step="3">Compression</span>
+                  <span class="side-label" data-step="4">AI artifacts</span>
+                </div>
+
+                <!-- Phase tracker -->
+                <div class="scan-phase-tracker" aria-hidden="true">
+                  <div class="phase-step" data-phase="upload">
+                    <span class="phase-dot"></span>
+                    <span class="phase-name">Upload</span>
+                  </div>
+                  <div class="phase-step" data-phase="scanning">
+                    <span class="phase-dot"></span>
+                    <span class="phase-name">Scanning</span>
+                  </div>
+                  <div class="phase-step" data-phase="analysis">
+                    <span class="phase-dot"></span>
+                    <span class="phase-name">Analysis</span>
+                  </div>
+                  <div class="phase-step" data-phase="verdict">
+                    <span class="phase-dot"></span>
+                    <span class="phase-name">Verdict</span>
+                  </div>
+                </div>
+
+                <!-- Phase 4: verdict card -->
+                <div class="scan-verdict-card">
+                  <span class="verdict-label">Verdict</span>
+                  <span class="verdict-badge verdict-badge--real">Likely Real</span>
+                  <div class="verdict-confidence">
+                    <span class="verdict-confidence-text">Confidence</span>
+                    <div class="verdict-bar-track">
+                      <div id="verdict-bar-fill" class="verdict-bar-fill"></div>
+                    </div>
+                    <span class="verdict-confidence-pct">3%</span>
+                  </div>
+                  <div class="verdict-tags">
+                    <span class="verdict-tag">No AI artifacts</span>
+                    <span class="verdict-tag">EXIF present</span>
+                    <span class="verdict-tag">Natural noise</span>
+                    <span class="verdict-tag">Authentic</span>
+                  </div>
+                </div>
+              </div>
+
+              <button type="button" id="scan-replay" class="scan-replay" aria-label="Replay scan animation">
+                Replay
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Ticker -->
+        <section class="ticker" aria-label="Platform statistics">
+          <div class="ticker-item">
+            <span class="ticker-value">12,400+</span>
+            <span class="ticker-label">Images scanned</span>
+          </div>
+          <div class="ticker-item">
+            <span class="ticker-value">99.1%</span>
+            <span class="ticker-label">Detection accuracy</span>
+          </div>
+          <div class="ticker-item">
+            <span class="ticker-value">&lt;5s</span>
+            <span class="ticker-label">Average analysis</span>
+          </div>
+          <div class="ticker-item">
+            <span class="ticker-value">3</span>
+            <span class="ticker-label">Verdict categories</span>
+          </div>
+        </section>
+
+        <!-- How it works -->
+        <section id="how-it-works" class="section how-section" aria-labelledby="how-title">
+          <p class="section-tag"><span class="section-tag-dot" aria-hidden="true">●</span> PROCESS</p>
+          <h2 id="how-title" class="section-title">
+            How we <span class="text-accent">analyse</span> your image
+          </h2>
+          <div class="steps-grid">
+            <article class="step-card">
+              <span class="step-number" aria-hidden="true">01</span>
+              <div class="step-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h3 class="step-title">Upload Your Image</h3>
+              <p class="step-desc">Drag and drop or select a JPG PNG or WebP. No account required for a quick scan.</p>
+            </article>
+            <article class="step-card">
+              <span class="step-number" aria-hidden="true">02</span>
+              <div class="step-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="4" y="4" width="16" height="16" rx="1"/>
+                  <path d="M9 9h2v2H9zm4 0h2v2h-2zm-4 4h2v2H9zm4 0h2v2h-2z"/>
+                </svg>
+              </div>
+              <h3 class="step-title">Deep Analysis</h3>
+              <p class="step-desc">Our engine analyses pixel patterns, EXIF data, noise signatures and AI generation artifacts.</p>
+            </article>
+            <article class="step-card">
+              <span class="step-number" aria-hidden="true">03</span>
+              <div class="step-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M12 3l7 4v5c0 4.5-3.5 8.5-7 9-3.5-.5-7-4.5-7-9V7l7-4z" stroke-linejoin="round"/>
+                  <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h3 class="step-title">Get Your Verdict</h3>
+              <p class="step-desc">Receive a confidence score, detailed explanation and full metadata report in under 5 seconds.</p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Recent scans -->
+        <section class="section recent-section" aria-labelledby="recent-title">
+          <p class="section-tag"><span class="section-tag-dot" aria-hidden="true">●</span> LIVE RESULTS</p>
+          <h2 id="recent-title" class="section-title">
+            Recent <span class="text-accent">scans</span>
+          </h2>
+          <ul class="recent-list">
+            <li class="recent-row">
+              <div class="recent-thumb" aria-hidden="true"></div>
+              <div class="recent-info">
+                <span class="recent-filename">landscape_photo.jpg</span>
+                <span class="recent-meta">2 minutes ago &middot; EXIF present</span>
+              </div>
+              <div class="recent-confidence">
+                <div class="confidence-bar-track">
+                  <div class="confidence-bar confidence-bar--green" style="width: 1%;"></div>
+                </div>
+                <span class="confidence-pct">1%</span>
+              </div>
+              <span class="badge badge--green">Likely Real</span>
+            </li>
+            <li class="recent-row">
+              <div class="recent-thumb recent-thumb--alt" aria-hidden="true"></div>
+              <div class="recent-info">
+                <span class="recent-filename">portrait_render.png</span>
+                <span class="recent-meta">8 minutes ago &middot; No EXIF data</span>
+              </div>
+              <div class="recent-confidence">
+                <div class="confidence-bar-track">
+                  <div class="confidence-bar confidence-bar--red" style="width: 98%;"></div>
+                </div>
+                <span class="confidence-pct">98%</span>
+              </div>
+              <span class="badge badge--red">AI-Generated</span>
+            </li>
+            <li class="recent-row">
+              <div class="recent-thumb recent-thumb--alt2" aria-hidden="true"></div>
+              <div class="recent-info">
+                <span class="recent-filename">social_media_post.jpg</span>
+                <span class="recent-meta">15 minutes ago &middot; EXIF stripped</span>
+              </div>
+              <div class="recent-confidence">
+                <div class="confidence-bar-track">
+                  <div class="confidence-bar confidence-bar--orange" style="width: 52%;"></div>
+                </div>
+                <span class="confidence-pct">52%</span>
+              </div>
+              <span class="badge badge--orange">Uncertain</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- CTA -->
+        <section class="section cta-section" aria-labelledby="cta-title">
+          <div class="cta-left">
+            <h2 id="cta-title" class="cta-heading">
+              Ready to <span class="text-accent">verify</span> your first image?
+            </h2>
+            <p class="cta-sub">Start scanning in seconds</p>
+            <p class="cta-desc">
+              Join thousands of users who trust VerifAi to separate authentic photography from AI-generated imagery. Free, fast, and accurate.
+            </p>
+          </div>
+          <a href="upload.html" class="cta-upload-box">
+            <svg class="cta-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="cta-upload-text">Drop your image here or click to browse</span>
+            <span class="btn btn-primary cta-upload-btn">Scan Now</span>
+          </a>
+        </section>
+
+        <!-- About -->
+        <section id="about" class="section about-section" aria-labelledby="about-title">
+          <p class="section-tag"><span class="section-tag-dot" aria-hidden="true">●</span> ABOUT</p>
+          <h2 id="about-title" class="section-title">
+            About <span class="text-accent">VerifAi</span>
+          </h2>
+          <div class="about-content">
+            <p class="about-desc">
+              VerifAi is a web-based AI image authenticity checker built to help people navigate a modern problem: it&apos;s becoming harder to tell what&apos;s real online.
+              With AI-generated images spreading rapidly across social media, news feeds, and messaging platforms, quick verification helps reduce misinformation and rebuild trust.
+            </p>
+            <p class="about-desc">
+              By combining signal-based analysis (pixel patterns, noise characteristics and compression artifacts) with metadata checks (EXIF verification), VerifAi provides a clear verdict and a confidence score, so users can make more informed decisions before sharing, reporting, or relying on an image.
+            </p>
+            <p class="about-meta">
+              Group project by Mim Kumar Gurung, Jerome Murillo and Maleesha Hirushan Rashmika. Submitted to Australian Catholic University.
+            </p>
+
+            <div class="about-photos" aria-label="Project photos">
+              <p class="about-photos-title">Project photos</p>
+              <p class="about-photos-note">
+                We&apos;re planning to add photos here from the days we worked together to complete the project.
+              </p>
+              <!-- TODO: Add team photos (img tags) here -->
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <a class="footer-brand" href="index.html">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span class="brand-text"><span class="brand-verif">Verif</span><span class="brand-ai">Ai</span></span>
+        </a>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="upload.html">Upload</a>
+          <a href="history.html">History</a>
+          <a href="register.html">Register</a>
+        </nav>
+        <p class="footer-copy">&copy; 2026 VerifAi. All rights reserved.</p>
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        var intro = document.getElementById('intro-overlay');
+        var landing = document.getElementById('landing');
+        var scanDemo = document.getElementById('scan-demo');
+        var scanImage = document.getElementById('scan-image');
+        var replayBtn = document.getElementById('scan-replay');
+        var verdictBar = document.getElementById('verdict-bar-fill');
+        var scanTimers = [];
+
+        function clearScanTimers() {
+          scanTimers.forEach(clearTimeout);
+          scanTimers = [];
+        }
+
+        function schedule(fn, delay) {
+          scanTimers.push(setTimeout(fn, delay));
+        }
+
+        function resetScanDemo() {
+          if (!scanDemo) return;
+          scanDemo.className = 'scan-demo';
+          if (verdictBar) {
+            verdictBar.style.width = '0%';
+          }
+          var labels = scanDemo.querySelectorAll('.side-label');
+          labels.forEach(function (el) {
+            el.classList.remove('side-label--active');
+          });
+          var phases = scanDemo.querySelectorAll('.phase-step');
+          phases.forEach(function (el) {
+            el.classList.remove('phase-step--active', 'phase-step--done');
+          });
+          var beam = scanDemo.querySelector('.scan-beam');
+          if (beam && beam.parentNode) {
+            var newBeam = beam.cloneNode(true);
+            beam.parentNode.replaceChild(newBeam, beam);
+          }
+        }
+
+        function runScanAnimation() {
+          clearScanTimers();
+          resetScanDemo();
+          if (!scanDemo) return;
+
+          schedule(function () {
+            scanDemo.classList.add('scan-demo--upload');
+            setPhaseActive('upload');
+          }, 500);
+
+          schedule(function () {
+            scanDemo.classList.remove('scan-demo--upload');
+            scanDemo.classList.add('scan-demo--scanning');
+            setPhaseDone('upload');
+            setPhaseActive('scanning');
+          }, 700);
+
+          schedule(function () {
+            scanDemo.classList.remove('scan-demo--scanning');
+            scanDemo.classList.add('scan-demo--analysis');
+            setPhaseDone('scanning');
+            setPhaseActive('analysis');
+            activateSideLabels();
+          }, 2000);
+
+          schedule(function () {
+            scanDemo.classList.remove('scan-demo--analysis');
+            scanDemo.classList.add('scan-demo--verdict');
+            setPhaseDone('analysis');
+            setPhaseActive('verdict');
+            if (verdictBar) {
+              verdictBar.style.width = '3%';
+            }
+          }, 3800);
+        }
+
+        function setPhaseActive(name) {
+          var step = scanDemo.querySelector('[data-phase="' + name + '"]');
+          if (step) step.classList.add('phase-step--active');
+        }
+
+        function setPhaseDone(name) {
+          var step = scanDemo.querySelector('[data-phase="' + name + '"]');
+          if (step) {
+            step.classList.remove('phase-step--active');
+            step.classList.add('phase-step--done');
+          }
+        }
+
+        function activateSideLabels() {
+          var labels = scanDemo.querySelectorAll('.side-label');
+          labels.forEach(function (el, i) {
+            schedule(function () {
+              el.classList.add('side-label--active');
+            }, 400 + i * 280);
+          });
+        }
+
+        function handleImageError() {
+          if (scanImage) {
+            scanImage.classList.add('scan-image--failed');
+          }
+        }
+
+        if (scanImage) {
+          scanImage.addEventListener('error', handleImageError);
+          if (!scanImage.complete || scanImage.naturalWidth === 0) {
+            scanImage.addEventListener('load', function () {}, { once: true });
+          }
+        }
+
+        setTimeout(function () {
+          if (intro) {
+            intro.style.display = 'none';
+            intro.setAttribute('aria-hidden', 'true');
+          }
+        }, 3800);
+
+        setTimeout(function () {
+          if (landing) landing.classList.add('landing--visible');
+          runScanAnimation();
+        }, 3600);
+
+        if (replayBtn) {
+          replayBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            runScanAnimation();
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

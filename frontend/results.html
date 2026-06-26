@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scan results — VerifAi</title>
+    <meta name="description" content="VerifAi authenticity scan results for your image." />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="results.css" />
+    <script src="results.js" defer></script>
+  </head>
+  <body class="page-app page-results">
+    <header class="navbar">
+      <a class="navbar-brand" href="index.html">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span class="brand-text"><span class="brand-verif">Verif</span><span class="brand-ai">Ai</span></span>
+      </a>
+      <nav class="navbar-nav" aria-label="Primary">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.html#how-it-works" class="nav-link">How it works</a>
+        <a href="history.html" class="nav-link">History</a>
+        <a href="index.html#about" class="nav-link">About</a>
+      </nav>
+      <div class="navbar-actions">
+        <a href="login.html" class="btn btn-ghost">Sign in</a>
+        <a href="upload.html" class="btn btn-primary">Get Started</a>
+      </div>
+    </header>
+
+    <main class="results-main">
+      <div class="results-layout">
+        <div class="results-left">
+          <figure class="results-figure">
+            <img
+              id="result-image"
+              class="results-image"
+              width="640"
+              height="720"
+              alt="Image you submitted for authenticity analysis"
+            />
+          </figure>
+        </div>
+
+        <div class="results-right">
+          <div
+            id="verdict-badge"
+            class="verdict-badge verdict-badge--uncertain"
+            role="status"
+            aria-live="polite"
+          >
+            UNCERTAIN
+          </div>
+
+          <div class="confidence-block">
+            <span class="confidence-label" id="confidence-label-text">Confidence</span>
+            <span class="confidence-percent" id="confidence-percent">0%</span>
+            <div
+              class="confidence-bar"
+              role="progressbar"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+              aria-labelledby="confidence-label-text"
+            >
+              <div class="confidence-bar-fill" id="confidence-bar-fill"></div>
+            </div>
+          </div>
+
+          <div class="accordion" id="results-accordion">
+            <div class="accordion-item">
+              <h2 class="accordion-heading">
+                <button
+                  type="button"
+                  class="accordion-trigger"
+                  id="acc-metadata"
+                  aria-expanded="false"
+                  aria-controls="panel-metadata"
+                >
+                  Image Metadata
+                  <svg class="accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="currentColor" d="M7 10l5 5 5-5H7z" />
+                  </svg>
+                </button>
+              </h2>
+              <div
+                class="accordion-panel"
+                id="panel-metadata"
+                role="region"
+                aria-labelledby="acc-metadata"
+                hidden
+              >
+                <p id="accordion-metadata-text" class="accordion-text-pre">
+                  Metadata will appear here once loaded.
+                </p>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-heading">
+                <button
+                  type="button"
+                  class="accordion-trigger"
+                  id="acc-pixel"
+                  aria-expanded="false"
+                  aria-controls="panel-pixel"
+                >
+                  Pixel Analysis
+                  <svg class="accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="currentColor" d="M7 10l5 5 5-5H7z" />
+                  </svg>
+                </button>
+              </h2>
+              <div
+                class="accordion-panel"
+                id="panel-pixel"
+                role="region"
+                aria-labelledby="acc-pixel"
+                hidden
+              >
+                <p id="accordion-pixel-text">Pixel analysis will appear here once loaded.</p>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-heading">
+                <button
+                  type="button"
+                  class="accordion-trigger"
+                  id="acc-overall"
+                  aria-expanded="false"
+                  aria-controls="panel-overall"
+                >
+                  Overall Explanation
+                  <svg class="accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="currentColor" d="M7 10l5 5 5-5H7z" />
+                  </svg>
+                </button>
+              </h2>
+              <div
+                class="accordion-panel"
+                id="panel-overall"
+                role="region"
+                aria-labelledby="acc-overall"
+                hidden
+              >
+                <p id="accordion-overall-text">Overall explanation will appear here once loaded.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="results-actions">
+            <button type="button" class="btn btn-ghost btn-share" id="btn-share-result">Share Result</button>
+            <a class="btn btn-primary btn-back" href="upload.html">Back to Upload</a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div class="results-toast" id="results-toast" role="status" aria-live="polite" hidden>
+      Link copied!
+    </div>
+
+    <footer class="footer">
+      <a class="footer-brand" href="index.html">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span class="brand-text"><span class="brand-verif">Verif</span><span class="brand-ai">Ai</span></span>
+      </a>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="index.html">Home</a>
+        <a href="upload.html">Upload</a>
+        <a href="history.html">History</a>
+        <a href="register.html">Register</a>
+      </nav>
+      <p class="footer-copy">&copy; 2026 VerifAi. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

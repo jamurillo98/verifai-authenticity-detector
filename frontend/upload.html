@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload — VerifAi</title>
+    <meta name="description" content="Upload an image to scan with VerifAi." />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="upload.css" />
+  </head>
+  <body class="page-app page-upload">
+    <header class="navbar">
+      <a class="navbar-brand" href="index.html">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span class="brand-text"><span class="brand-verif">Verif</span><span class="brand-ai">Ai</span></span>
+      </a>
+      <nav class="navbar-nav" aria-label="Primary">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.html#how-it-works" class="nav-link">How it works</a>
+        <a href="history.html" class="nav-link">History</a>
+        <a href="index.html#about" class="nav-link">About</a>
+      </nav>
+      <div class="navbar-actions">
+        <a href="login.html" class="btn btn-ghost">Sign in</a>
+        <a href="upload.html" class="btn btn-primary">Get Started</a>
+      </div>
+    </header>
+
+    <main class="page-main">
+      <header class="page-header">
+        <p class="section-tag"><span class="section-tag-dot" aria-hidden="true">●</span> SCAN</p>
+        <h1 class="page-title">Upload your image</h1>
+      </header>
+
+      <div class="upload-panel">
+        <div class="drop-zone" id="drop-zone" role="region" aria-label="Upload area" tabindex="0">
+          <span class="drop-zone-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <p class="drop-zone-title">Drag and drop your image here or click to browse</p>
+          <p class="drop-zone-hint">Supports JPG, PNG, WebP — max 10MB</p>
+          <input
+            type="file"
+            id="file-input"
+            name="image"
+            class="visually-hidden"
+            accept="image/png,image/jpeg,image/jpg,image/webp,image/*"
+            tabindex="-1"
+          />
+          <button type="button" class="btn btn-accent btn-choose-image" id="choose-image-btn">Choose Image</button>
+        </div>
+
+        <section class="preview-section is-empty" id="preview-section" aria-label="Image preview">
+          <p class="preview-empty" id="preview-empty">No image selected yet.</p>
+          <img id="preview-image" class="preview-image" alt="Selected image preview" hidden />
+        </section>
+
+        <button type="button" class="btn btn-primary btn-full btn-scan" id="scan-btn" disabled aria-busy="false">
+          <span class="scan-spinner" aria-hidden="true"></span>
+          <span class="scan-label">Scan Now</span>
+        </button>
+
+        <div
+          id="upload-error-card"
+          class="upload-error-card"
+          role="alert"
+          aria-live="assertive"
+          hidden
+        >
+          <div class="upload-error-card__content">
+            <h2 class="upload-error-card__title" id="upload-error-card-title">Upload failed</h2>
+            <p class="upload-error-card__message" id="upload-error-card-message"></p>
+          </div>
+          <button type="button" class="btn btn-ghost upload-error-card__retry" id="upload-error-retry">
+            Try Again
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <a class="footer-brand" href="index.html">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span class="brand-text"><span class="brand-verif">Verif</span><span class="brand-ai">Ai</span></span>
+      </a>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="index.html">Home</a>
+        <a href="upload.html">Upload</a>
+        <a href="history.html">History</a>
+        <a href="register.html">Register</a>
+      </nav>
+      <p class="footer-copy">&copy; 2026 VerifAi. All rights reserved.</p>
+    </footer>
+
+    <div
+      id="scan-overlay"
+      class="scan-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="scan-overlay-status-text"
+      aria-hidden="true"
+      hidden
+    >
+      <div class="scan-overlay__inner">
+        <div class="scan-overlay__stage">
+          <div class="scan-overlay__frame">
+            <img id="scan-overlay-image" class="scan-overlay__img" alt="Image being scanned" />
+            <div class="scan-overlay__grid" aria-hidden="true"></div>
+            <div class="scan-overlay__beam scan-overlay__beam--h" aria-hidden="true"></div>
+            <div class="scan-overlay__beam scan-overlay__beam--v" aria-hidden="true"></div>
+            <div class="scan-overlay__brackets" aria-hidden="true">
+              <span class="overlay-bracket overlay-bracket--tl"></span>
+              <span class="overlay-bracket overlay-bracket--tr"></span>
+              <span class="overlay-bracket overlay-bracket--bl"></span>
+              <span class="overlay-bracket overlay-bracket--br"></span>
+            </div>
+            <div class="scan-overlay__dots" id="scan-overlay-dots" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="scan-overlay__footer">
+          <div class="scan-overlay__brand" aria-hidden="true">
+            <span class="brand-text"><span class="brand-verif">Verif</span><span class="brand-ai">Ai</span></span>
+          </div>
+          <p class="scan-overlay__status" id="scan-overlay-title">
+            <span id="scan-overlay-status-text">Uploading image...</span>
+            <span class="scan-overlay__status-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+          </p>
+          <div class="scan-overlay__bar-track" aria-hidden="true">
+            <div class="scan-overlay__bar-fill" id="scan-overlay-bar-fill"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var zone = document.getElementById("drop-zone");
+        var input = document.getElementById("file-input");
+        var chooseBtn = document.getElementById("choose-image-btn");
+        var preview = document.getElementById("preview-image");
+        var previewSection = document.getElementById("preview-section");
+        var emptyMsg = document.getElementById("preview-empty");
+        var scanBtn = document.getElementById("scan-btn");
+        var scanLabel = scanBtn.querySelector(".scan-label");
+        var errorCard = document.getElementById("upload-error-card");
+        var errorTitle = document.getElementById("upload-error-card-title");
+        var errorMessage = document.getElementById("upload-error-card-message");
+        var errorRetry = document.getElementById("upload-error-retry");
+        var scanOverlay = document.getElementById("scan-overlay");
+        var scanOverlayImg = document.getElementById("scan-overlay-image");
+        var scanOverlayDots = document.getElementById("scan-overlay-dots");
+        var scanOverlayStatusText = document.getElementById("scan-overlay-status-text");
+        var scanOverlayBarFill = document.getElementById("scan-overlay-bar-fill");
+        var statusTimer = null;
+        var dotTimer = null;
+        var statusIndex = 0;
+        var STATUS_MESSAGES = [
+          "Uploading image...",
+          "Analysing pixel patterns...",
+          "Checking EXIF metadata...",
+          "Detecting AI artifacts...",
+          "Calculating confidence score...",
+          "Generating verdict...",
+        ];
+        var objectUrl = null;
+        var dragDepth = 0;
+        var isUploading = false;
+        var MAX_IMAGE_BYTES = 15 * 1024 * 1024;
+        var ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+        var UPLOAD_TIMEOUT_MS = 120000;
+
+        function getAuthHeaders() {
+          var headers = {};
+          try {
+            var token = localStorage.getItem("verifai_token");
+            if (token && String(token).trim()) {
+              headers.Authorization = "Bearer " + String(token).trim();
+            }
+          } catch (e) {}
+          return headers;
+        }
+
+        function hideUploadErrorCard() {
+          if (!errorCard) return;
+          errorCard.setAttribute("hidden", "");
+          if (errorMessage) errorMessage.textContent = "";
+        }
+
+        function showUploadErrorCard(title, message) {
+          if (errorTitle) errorTitle.textContent = title || "Something went wrong";
+          if (errorMessage) errorMessage.textContent = message || "Please try again.";
+          if (errorCard) errorCard.removeAttribute("hidden");
+          var panel = document.querySelector(".upload-panel");
+          if (panel && typeof panel.scrollIntoView === "function") {
+            panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }
+        }
+
+        function classifyUploadFailure(err, responseStatus, payloadMessage) {
+          var name = err && err.name ? err.name : "";
+          var raw = "";
+          if (typeof payloadMessage === "string" && payloadMessage.trim()) raw = payloadMessage.trim();
+          else if (err && typeof err.message === "string") raw = err.message.trim();
+          var lower = raw.toLowerCase();
+
+          if (name === "AbortError") {
+            return {
+              title: "Request timed out",
+              message:
+                "The server took too long to respond. Check your connection and try again, or try a smaller image.",
+            };
+          }
+
+          if (
+            lower.indexOf("only jpg") !== -1 ||
+            lower.indexOf("png, and webp") !== -1 ||
+            lower.indexOf("png, or webp") !== -1 ||
+            (lower.indexOf("images are allowed") !== -1 && lower.indexOf("only") !== -1)
+          ) {
+            return {
+              title: "Wrong file type",
+              message:
+                raw ||
+                "Only PNG, JPG, and WEBP images are accepted. Convert your file or choose a different image.",
+            };
+          }
+
+          if (
+            responseStatus === 413 ||
+            lower.indexOf("too large") !== -1 ||
+            lower.indexOf("file too large") !== -1 ||
+            lower.indexOf("limit_file_size") !== -1 ||
+            lower.indexOf("multererror") !== -1 && lower.indexOf("size") !== -1
+          ) {
+            return {
+              title: "File too large",
+              message:
+                "This image is over the 15 MB limit. Use a smaller file or export at lower resolution.",
+            };
+          }
+
+          if (raw) {
+            return { title: "Upload failed", message: raw };
+          }
+
+          return {
+            title: "Upload failed",
+            message: "We couldn’t complete the upload. Check your connection and try again.",
+          };
+        }
+
+        function validateImageFile(file) {
+          if (!file) {
+            return { ok: false, title: "No file selected", message: "Choose a PNG, JPG, or WEBP image to scan." };
+          }
+          if (ALLOWED_IMAGE_TYPES.indexOf(file.type) === -1) {
+            return {
+              ok: false,
+              title: "Wrong file type",
+              message:
+                "Only PNG, JPG, and WEBP are supported. Your file is " +
+                (file.type || "not a supported image type") +
+                ".",
+            };
+          }
+          if (file.size > MAX_IMAGE_BYTES) {
+            return {
+              ok: false,
+              title: "File too large",
+              message:
+                "This file is " +
+                Math.ceil(file.size / (1024 * 1024)) +
+                " MB. Maximum size is 15 MB.",
+            };
+          }
+          return { ok: true };
+        }
+
+        function pickFirstImage(files) {
+          if (!files || !files.length) return null;
+          for (var i = 0; i < files.length; i++) {
+            if (files[i].type && files[i].type.indexOf("image/") === 0) return files[i];
+          }
+          return null;
+        }
+
+        function setPreview(file) {
+          if (objectUrl) {
+            URL.revokeObjectURL(objectUrl);
+            objectUrl = null;
+          }
+          if (!file) {
+            preview.removeAttribute("src");
+            preview.hidden = true;
+            emptyMsg.hidden = false;
+            previewSection.classList.add("is-empty");
+            scanBtn.disabled = true;
+            return;
+          }
+          objectUrl = URL.createObjectURL(file);
+          preview.src = objectUrl;
+          preview.hidden = false;
+          emptyMsg.hidden = true;
+          previewSection.classList.remove("is-empty");
+          scanBtn.disabled = false;
+        }
+
+        function spawnAnalysisDot() {
+          if (!scanOverlayDots) return;
+          var dot = document.createElement("span");
+          dot.className = "scan-overlay__dot";
+          dot.style.left = 12 + Math.random() * 76 + "%";
+          dot.style.top = 12 + Math.random() * 76 + "%";
+          scanOverlayDots.appendChild(dot);
+          window.setTimeout(function () {
+            if (dot.parentNode) dot.parentNode.removeChild(dot);
+          }, 1200);
+        }
+
+        function cycleStatusMessage() {
+          if (!scanOverlayStatusText || !STATUS_MESSAGES.length) return;
+          statusIndex = (statusIndex + 1) % STATUS_MESSAGES.length;
+          scanOverlayStatusText.textContent = STATUS_MESSAGES[statusIndex];
+        }
+
+        function startScanOverlayAnimations() {
+          if (!scanOverlay) return;
+          scanOverlay.classList.add("scan-overlay--active");
+          statusIndex = 0;
+          if (scanOverlayStatusText) {
+            scanOverlayStatusText.textContent = STATUS_MESSAGES[0];
+          }
+          statusTimer = window.setInterval(cycleStatusMessage, 1500);
+          dotTimer = window.setInterval(spawnAnalysisDot, 600);
+          spawnAnalysisDot();
+          if (scanOverlayBarFill) {
+            scanOverlayBarFill.style.animation = "none";
+            void scanOverlayBarFill.offsetWidth;
+            scanOverlayBarFill.style.animation = "";
+          }
+        }
+
+        function stopScanOverlayAnimations() {
+          if (statusTimer) {
+            window.clearInterval(statusTimer);
+            statusTimer = null;
+          }
+          if (dotTimer) {
+            window.clearInterval(dotTimer);
+            dotTimer = null;
+          }
+          if (scanOverlay) scanOverlay.classList.remove("scan-overlay--active");
+          if (scanOverlayDots) scanOverlayDots.textContent = "";
+          if (scanOverlayBarFill) {
+            scanOverlayBarFill.style.animation = "none";
+            scanOverlayBarFill.style.width = "0";
+          }
+          statusIndex = 0;
+        }
+
+        function setScanOverlay(open) {
+          if (!scanOverlay) return;
+          if (open) {
+            if (scanOverlayImg && preview && preview.src) {
+              scanOverlayImg.src = preview.src;
+            }
+            scanOverlay.removeAttribute("hidden");
+            scanOverlay.setAttribute("aria-hidden", "false");
+            document.body.classList.add("scan-overlay-open");
+            startScanOverlayAnimations();
+          } else {
+            stopScanOverlayAnimations();
+            scanOverlay.setAttribute("hidden", "");
+            scanOverlay.setAttribute("aria-hidden", "true");
+            document.body.classList.remove("scan-overlay-open");
+            if (scanOverlayImg) scanOverlayImg.removeAttribute("src");
+          }
+        }
+
+        function setLoadingState(loading) {
+          isUploading = !!loading;
+          scanBtn.classList.toggle("is-loading", isUploading);
+          scanBtn.setAttribute("aria-busy", isUploading ? "true" : "false");
+          if (scanLabel) scanLabel.textContent = isUploading ? "Scanning..." : "Scan Now";
+          scanBtn.disabled = isUploading || !(input.files && input.files[0]);
+          setScanOverlay(isUploading);
+        }
+
+        function extractScanId(payload) {
+          if (!payload || typeof payload !== "object") return null;
+          if (typeof payload.scanId === "string" && payload.scanId) return payload.scanId;
+          if (typeof payload.scan_id === "string" && payload.scan_id) return payload.scan_id;
+          if (typeof payload.id === "string" && payload.id) return payload.id;
+          if (typeof payload.id === "number" && Number.isFinite(payload.id)) return String(payload.id);
+          var data = payload.data;
+          if (data && typeof data === "object") {
+            if (typeof data.scanId === "string" && data.scanId) return data.scanId;
+            if (typeof data.scan_id === "string" && data.scan_id) return data.scan_id;
+            if (typeof data.id === "string" && data.id) return data.id;
+            if (typeof data.id === "number" && Number.isFinite(data.id)) return String(data.id);
+          }
+          return null;
+        }
+
+        if (errorRetry) {
+          errorRetry.addEventListener("click", function () {
+            hideUploadErrorCard();
+            if (input) input.focus();
+          });
+        }
+
+        if (chooseBtn && input) {
+          chooseBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            input.click();
+          });
+        }
+
+        if (zone && input) {
+          zone.addEventListener("click", function (e) {
+            if (e.target.closest(".btn-choose-image")) return;
+            input.click();
+          });
+        }
+
+        input.addEventListener("change", function () {
+          hideUploadErrorCard();
+          setPreview(pickFirstImage(input.files));
+        });
+
+        zone.addEventListener("dragover", function (e) {
+          e.preventDefault();
+        });
+        zone.addEventListener("dragenter", function (e) {
+          e.preventDefault();
+          dragDepth++;
+          zone.classList.add("is-dragover");
+        });
+        zone.addEventListener("dragleave", function (e) {
+          e.preventDefault();
+          dragDepth = Math.max(0, dragDepth - 1);
+          if (dragDepth === 0) zone.classList.remove("is-dragover");
+        });
+        zone.addEventListener("drop", function (e) {
+          e.preventDefault();
+          dragDepth = 0;
+          zone.classList.remove("is-dragover");
+          var f = pickFirstImage(e.dataTransfer && e.dataTransfer.files);
+          if (!f || !input) return;
+          try {
+            var dt = new DataTransfer();
+            dt.items.add(f);
+            input.files = dt.files;
+          } catch (err) {
+            return;
+          }
+          hideUploadErrorCard();
+          setPreview(f);
+        });
+
+        scanBtn.addEventListener("click", async function () {
+          if (isUploading) return;
+          var file = input.files && input.files[0];
+          if (!file || !file.type || file.type.indexOf("image/") !== 0) {
+            showUploadErrorCard(
+              "No image selected",
+              "Choose a PNG, JPG, or WEBP file before submitting."
+            );
+            return;
+          }
+
+          var localCheck = validateImageFile(file);
+          if (!localCheck.ok) {
+            showUploadErrorCard(localCheck.title, localCheck.message);
+            return;
+          }
+
+          hideUploadErrorCard();
+          setLoadingState(true);
+
+          var formData = new FormData();
+          formData.append("image", file);
+
+          var leaveOverlayOpen = false;
+          var abortController = typeof AbortController !== "undefined" ? new AbortController() : null;
+          var timeoutId = null;
+          if (abortController) {
+            timeoutId = window.setTimeout(function () {
+              abortController.abort();
+            }, UPLOAD_TIMEOUT_MS);
+          }
+
+          try {
+            var fetchOpts = {
+              method: "POST",
+              body: formData,
+              headers: getAuthHeaders(),
+            };
+            if (abortController) fetchOpts.signal = abortController.signal;
+
+            var response = await fetch("https://vrifai-backend.onrender.com/api/upload", fetchOpts);
+
+            var payload = null;
+            try {
+              payload = await response.json();
+            } catch (parseErr) {}
+
+            if (!response.ok) {
+              var serverMsg =
+                payload && typeof payload.message === "string" ? payload.message : "";
+              var kind = classifyUploadFailure(null, response.status, serverMsg);
+              showUploadErrorCard(kind.title, kind.message);
+              return;
+            }
+
+            var scanId = extractScanId(payload);
+            if (!scanId) {
+              showUploadErrorCard(
+                "Upload incomplete",
+                "The server did not return a scan ID. Please try again."
+              );
+              return;
+            }
+
+            leaveOverlayOpen = true;
+            window.location.href = "results.html?id=" + encodeURIComponent(scanId);
+          } catch (err) {
+            var netMsg = "";
+            if (err && err.message === "Failed to fetch") {
+              netMsg = "Could not reach the server. Please check your connection and try again.";
+            }
+            var kind = classifyUploadFailure(err, null, netMsg || (err && err.message));
+            showUploadErrorCard(kind.title, kind.message);
+          } finally {
+            if (timeoutId !== null) window.clearTimeout(timeoutId);
+            if (!leaveOverlayOpen) setLoadingState(false);
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
