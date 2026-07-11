@@ -51,18 +51,14 @@ The prototype runs entirely in the browser.
 
 ## 🎥 Demo & Screenshots
 
-### Live Deployment  
-https://getverifaid.vercel.app
+### Screenshots
+- ./screenshots/verifai_home.jpeg
+- ./screenshots/verifai_upload.jpeg
+- ./screenshots/verifai_realresult.jpeg
+- ./screenshots/verifai_airesult.jpeg
 
-### Screenshots  
-*(Add your screenshots here once captured)*  
-Example placeholders:
-- `./screenshots/upload-page.png`
-- `./screenshots/analysis-result.png`
-- `./screenshots/error-state.png`
-
-### Demo Video  
-A demo video will be added once the Supabase backend is reactivated and the scanning pipeline is fully functional.
+### Demo Video
+A future demo video version is coming soon. For now, testing has been completed using the current prototype build.
 
 ---
 
